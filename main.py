@@ -2,6 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
+from pegandoNFs import nomeArquivoNf                                    # Pega o nome do arquivo
+from pegandoNFs import numNotasFiscais                                  # Pega o numero da NF
 import re
 import time
 
@@ -76,25 +78,28 @@ pesquisaProceso.send_keys(Keys.ENTER)
 
 
 # PEGANDO OS DADOS DA ULTIMA RP (NUMERO DA RP ANTIGA)
-# time.sleep(5)
-# iframeVisualizacao = driver.find_element(By.ID,'ifrVisualizacao')                                       # Pega o <iframe> Visualizacao que contem o icone de alterar documento dentro
-# driver.switch_to.frame(iframeVisualizacao)                                                                    # Muda para o iframe 'Visualizacao
-# iconeBoneco =  driver.find_element(By.XPATH,'//img[contains(@title,"Alterar Processo")]/..')            # Acha o icone Boneco
-# iconeBoneco.click()                                                                                           # Clica no icone Boneco
-#
-# tagNRP = driver.find_element(By.ID,'txtDescricao')                                                      # Encontra o campo input que esta o numero da RP
-# nRp = tagNRP.get_attribute('value')                                                                           # Pega o valor do campo input
-# nRp = re.sub(r'\/\d{2,4}','',nRp)                                                                 # Formata a string para conter somente o numero
-# nRp = re.sub(r'[\sa-zA-z]*','',nRp)
-#
-# print(f'ultima Rp: {nRp}')
-#
-# driver.switch_to.default_content()                                                                            # Volta para o Html principal
-# pesquisaProceso = driver.find_element(By.ID,'txtPesquisaRapida')                                        # Acha o campo pesquisa
-# pesquisaProceso.send_keys(processoUltimaRp)                                                                   # Preenche a pesquisa com o processo SEI da ultima RP
-# pesquisaProceso.send_keys(Keys.ENTER)
+time.sleep(5)
+iframeVisualizacao = driver.find_element(By.ID,'ifrVisualizacao')                                       # Pega o <iframe> Visualizacao que contem o icone de alterar documento dentro
+driver.switch_to.frame(iframeVisualizacao)                                                                    # Muda para o iframe 'Visualizacao
+iconeBoneco =  driver.find_element(By.XPATH,'//img[contains(@title,"Alterar Processo")]/..')            # Acha o icone Boneco
+iconeBoneco.click()                                                                                           # Clica no icone Boneco
 
-# DUPLICA A ULTIMA RP
+time.sleep(3)
+tagNRP = driver.find_element(By.ID,'txtDescricao')                                                      # Encontra o campo input que esta o numero da RP
+nRp = tagNRP.get_attribute('value')                                                                           # Pega o valor do campo input
+nRp = re.sub(r'\/\d{2,4}','',nRp)                                                                 # Formata a string para conter somente o numero
+nRp = re.sub(r'[\sa-zA-z]*','',nRp)
+
+
+print(f'ultima Rp: {nRp}')
+
+time.sleep(3)
+driver.switch_to.default_content()                                                                            # Volta para o Html principal
+pesquisaProceso = driver.find_element(By.ID,'txtPesquisaRapida')                                              # Acha o campo pesquisa
+pesquisaProceso.send_keys(processoUltimaRp)                                                                   # Preenche a pesquisa com o processo SEI da ultima RP
+pesquisaProceso.send_keys(Keys.ENTER)
+
+# DUPLICANDO A ULTIMA RP
 # time.sleep(5)
 # iframeVisualizacao = driver.find_element(By.ID,'ifrVisualizacao')                                       # Pega o <iframe> Visualizacao que contem o icone de alterar documento dentro
 # driver.switch_to.frame(iframeVisualizacao)                                                                    # Muda para o iframe 'Visualizacao
@@ -110,33 +115,57 @@ pesquisaProceso.send_keys(Keys.ENTER)
 #         inputCheck = driver.find_element(By.ID,f'chkInfraItem{40-indice}')
 #         inputCheck.click()
 #     except:
-#         print(f'nao encontrado check {40-indice} ]')
+#         print(f'nao encontrado check {40-indice} ')
 #
 # btnDuplicarProcesso = driver.find_element(By.ID,'btnDuplicarProcesso')
 # btnDuplicarProcesso.click()
 
+
+
 # EDITAR RP CRIADA
 time.sleep(5)
-iframeArvore = driver.find_element(By.ID,'ifrArvore')                   # Pega o <iframe> arvore que contem os processos relacionados dentro
-driver.switch_to.frame(iframeArvore)
-
-
-    # Primeira NF
-nf1 = driver.find_element(By.XPATH,'//span[contains(text(),"Nota Fiscal")]/..')
-nf1.click()
-
-driver.switch_to.default_content()
 iframeVisualizacao = driver.find_element(By.ID,'ifrVisualizacao')                                       # Pega o <iframe> Visualizacao que contem o icone de alterar documento dentro
-driver.switch_to.frame(iframeVisualizacao)
+driver.switch_to.frame(iframeVisualizacao)                                                                    # Muda para o iframe 'Visualizacao
+iconeBoneco =  driver.find_element(By.XPATH,'//img[contains(@title,"Alterar Processo")]/..')            # Acha o icone Boneco
+iconeBoneco.click()                                                                                           # Clica no icone Boneco
 
-iconeBoneco =  driver.find_element(By.XPATH,'//img[contains(@title,"Alterar Documento Externo")]/..')            # Acha o icone Boneco da NF
-iconeBoneco.click()
-
-uploadNf1 =  driver.find_element(By.ID,'filArquivo')
-uploadNf1.send_keys(r'\\CEMEV_SUECG01\Becape do Rececimento\Recebimento 2023\PARTS LUB\RP 38\NF 4200 PED 1829.pdf')
+especificacao = driver.find_element(By.ID,'txtDescricao')
+especificacao.clear()
+especificacao.send_keys(f'RP {nRp}/2023')
 time.sleep(3)
 
 btnSalvar = driver.find_element(By.ID,'btnSalvar')
 btnSalvar.click()
+time.sleep(3)
+
+driver.switch_to.default_content()
+
+iframeArvore = driver.find_element(By.ID,'ifrArvore')                                                               # Pega o <iframe> arvore que contem os processos relacionados dentro para mecher nas NF's
+driver.switch_to.frame(iframeArvore)
+
+    # Primeira NF
+nf1 = driver.find_element(By.XPATH,'//span[contains(text(),"Nota Fiscal")]/..')                                     # Clicando na primeira Nf
+nf1.click()
+time.sleep(5)
+
+# driver.switch_to.default_content()                                                                                      # Muda pro frame principal para poder acessar o iframVisualizacao
+# iframeVisualizacao = driver.find_element(By.ID,'ifrVisualizacao')                                                       # Pega o <iframe> Visualizacao que contem o icone de alterar documento dentro
+# driver.switch_to.frame(iframeVisualizacao)
+# time.sleep(2)
+#
+# iconeBoneco =  driver.find_element(By.XPATH,'//img[contains(@title,"Alterar Documento Externo")]/..')               # Acha o icone Boneco da NF
+# iconeBoneco.click()
+# time.sleep(2)
+#
+# numeroNf = driver.find_element(By.ID,'txtNumero')                                                                   # Acha o numero / nome na arvore no sei
+# numeroNf.clear()                                                                                                          # Apaga o que esta escrito no input
+# numeroNf.send_keys(f'NF {numNotasFiscais[1]}')                                                                            # Coloca o numero da NF
+#
+# uploadNf1 =  driver.find_element(By.ID,'filArquivo')                                                                # Acha o botao de fazer upload
+# uploadNf1.send_keys(fr'\\CEMEV_SUECG01\Becape do Rececimento\Recebimento 2023\PARTS LUB\RP 38\{nomeArquivoNf[1]}')        # Inclui a Nf Nova
+# time.sleep(3)
+#
+# btnSalvar = driver.find_element(By.ID,'btnSalvar')                                                                  # clica para salvar o
+# btnSalvar.click()                                                                                                         # clica para salvar o
 
     # Segunda NF
