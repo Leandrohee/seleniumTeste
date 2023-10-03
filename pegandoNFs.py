@@ -3,11 +3,15 @@ import re
 
 diretorio = r'C:\Users\70094757178\Documents\Leandro\Nfs\Parts'
 
-arquivos = os.listdir(diretorio)
+arquivos = os.listdir(diretorio)                                                          # Lista todos os arquivos desse diretorio
 numNotasFiscais = []
 nomeArquivoNf = []
+caminhoNf = []
 
 for arquivo in arquivos:
+
+    caminhoNf.append(fr'C:\Users\70094757178\Documents\Leandro\Nfs\Parts\{arquivo}')
+
     nomeArquivoNf.append(arquivo)
 
     nf= arquivo[0:10]                                                                     # Pega os 9 primeiros caracteres da string
@@ -15,5 +19,4 @@ for arquivo in arquivos:
     numNotasFiscais.append(nf)                                                            # Coloca o numero da nota no array
 
 
-print(nomeArquivoNf)
-print(numNotasFiscais)
+print(f"Numeros das Nf's: {numNotasFiscais}")
